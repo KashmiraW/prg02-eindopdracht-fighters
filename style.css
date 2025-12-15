@@ -1,0 +1,20 @@
+.my-red {
+    background-color: #630107;
+    color: white;
+    border-color: transparent;
+}
+.my-red:hover {
+    background-color: #7e0c18;
+}
+
+.my-purple {
+    background-color: #4f0d6a;
+    color: white;
+    border-color: transparent;
+}
+.my-purple:hover {
+    background-color: #7723aa;
+}
+.text-color {
+    color: #ffffff;
+}
