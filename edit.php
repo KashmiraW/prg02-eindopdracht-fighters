@@ -7,42 +7,34 @@ require_once "includes/image-helpers.php";
 //Check if Post isset, else do nothing
 if (isset($_POST['submit'])) {
     //Postback with the data showed to the user, first retrieve data from 'Super global'
-    $albumId = mysqli_escape_string($db, $_POST['id']);
-    $artist  = mysqli_escape_string($db, $_POST['artist']);
-    $name    = mysqli_escape_string($db, $_POST['name']);
-    $genre   = mysqli_escape_string($db, $_POST['genre']);
-    $year    = mysqli_escape_string($db, $_POST['year']);
-    $tracks  = mysqli_escape_string($db, $_POST['tracks']);
-    $image   = mysqli_escape_string($db, $_POST['current-image']);
+    $boxer = $_POST['id'];
+    $name  = mysqli_escape_string($db, $_POST['name']);
+    $country = mysqli_escape_string($db, $_POST['country']);
+    $style   = mysqli_escape_string($db, $_POST['style']);
+    $weightclass = mysqli_escape_string($db, $_POST['weightclass']);
+    $wins  = mysqli_escape_string($db, $_POST['wins']);
+
 
     //Require the form validation handling
     require_once "includes/form-validation.php";
 
     //Save variables to array so the form won't break
     //This array is build the same way as the db result
-    $album = [
-        'artist'    => $artist,
-        'name'      => $name,
-        'genre'     => $genre,
-        'year'      => $year,
-        'tracks'    => $tracks,
-        'image'     => $image,
+    $boxer = [
+        'id' => $boxer,
+        'name' => $name,
+        'country' => $country,
+        'style' => $style,
+        'weightclass' => $weightclass,
+        'wins' => $wins,
     ];
 
     if (empty($errors)) {
-        //If image is not empty, process the new image file
-        if ($_FILES['image']['error'] != 4) {
-            //Remove old image
-            deleteImageFile($image);
-
-            //Store new image & retrieve name for database saving (override current image name)
-            $image = addImageFile($_FILES['image']);
-        }
 
         //Update the record in the database
-        $query = "UPDATE albums
-                  SET name = '$name', artist = '$artist', genre = '$genre', year = '$year', tracks = '$tracks', image = '$image'
-                  WHERE id = '$albumId'";
+        $query = "UPDATE boxers
+                  SET name = '$name', name = '$name', country = '$country', style = '$style', weightclass = '$weightclass', wins = '$wins'
+                  WHERE id = '$boxer[id]'";
         $result = mysqli_query($db, $query);
 
         if ($result) {
@@ -55,13 +47,13 @@ if (isset($_POST['submit'])) {
     }
 } else if (isset($_GET['id'])) {
     //Retrieve the GET parameter from the 'Super global'
-    $albumId = $_GET['id'];
+    $boxingId = $_GET['id'];
 
     //Get the record from the database result
-    $query = "SELECT * FROM albums WHERE id = " . mysqli_escape_string($db, $albumId);
+    $query = "SELECT * FROM boxers WHERE id = " . mysqli_escape_string($db, $boxingId);
     $result = mysqli_query($db, $query);
     if (mysqli_num_rows($result) == 1) {
-        $album = mysqli_fetch_assoc($result);
+        $boxer = mysqli_fetch_assoc($result);
     } else {
         // redirect when db returns no result
         header('Location: index.php');
@@ -78,51 +70,63 @@ mysqli_close($db);
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Music Collection Edit</title>
+    <title>The 10 Best in Boxing Edit</title>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<h1>Edit "<?= htmlentities($album['artist']) . ' - ' . htmlentities($album['name']) ?>"</h1>
+<body class="container px-4">
+<h1 class="title mt-4">Edit "<?= htmlentities($boxer['name'])?>"</h1>
 
-<form action="" method="post" enctype="multipart/form-data">
-    <div class="data-field">
-        <label for="artist">Artist</label>
-        <input id="artist" type="text" name="artist" value="<?= htmlentities($album['artist']) ?>"/>
-        <span class="errors"><?= isset($errors['artist']) ? $errors['artist'] : '' ?></span>
-    </div>
-    <div class="data-field">
-        <label for="name">Album</label>
-        <input id="name" type="text" name="name" value="<?= htmlentities($album['name']) ?>"/>
+<section class="columns">
+<form class="column is-6" action="" method="post" enctype="multipart/form-data">
+    <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <label class="label" for="name">Name</label>
+        <div class="field-label is-normal"></div>
+        <input class="input" id="name" type="text" name="name" value="<?= htmlentities($boxer['name']) ?>"/>
         <span class="errors"><?= isset($errors['name']) ? $errors['name'] : '' ?></span>
     </div>
-    <div class="data-field">
-        <label for="genre">Genre</label>
-        <input id="genre" type="text" name="genre" value="<?= htmlentities($album['genre']) ?>"/>
-        <span class="errors"><?= isset($errors['genre']) ? $errors['genre'] : '' ?></span>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <label class="label" for="country">Country</label>
+        <div class="field-label is-normal"></div>
+        <input class="input" id="country" type="text" name="country" value="<?= htmlentities($boxer['country']) ?>"/>
+        <span class="errors"><?= isset($errors['country']) ? $errors['country'] : '' ?></span>
     </div>
-    <div class="data-field">
-        <label for="year">Year</label>
-        <input id="year" type="text" name="year" value="<?= htmlentities($album['year']) ?>"/>
-        <span class="errors"><?= isset($errors['year']) ? $errors['year'] : '' ?></span>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <label class="label" for="style">Style</label>
+        <div class="field-label is-normal"></div>
+        <input class="input" id="style" type="text" name="style" value="<?= htmlentities($boxer['style']) ?>"/>
+        <span class="errors"><?= isset($errors['style']) ? $errors['style'] : '' ?></span>
     </div>
-    <div class="data-field">
-        <label for="tracks">Tracks</label>
-        <input id="tracks" type="number" name="tracks" value="<?= htmlentities($album['tracks']) ?>"/>
-        <span class="errors"><?= isset($errors['tracks']) ? $errors['tracks'] : '' ?></span>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <label class="label" for="weightclass">Weightclass</label>
+        <div class="field-label is-normal"></div>
+        <input class="input" id="weightclass" type="text" name="weightclass" value="<?= htmlentities($boxer['weightclass']) ?>"/>
+        <span class="errors"><?= isset($errors['weightclass']) ? $errors['weightclass'] : '' ?></span>
     </div>
-    <div class="data-field">
-        <label for="image">Image</label>
-        <input type="file" name="image" id="image"/>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <label class="label" for="wins">Wins</label>
+
+        <div class="field-label is-normal"></div>
+            <input class="input" id="wins" type="number" name="wins" value="<?= htmlentities($boxer['wins']) ?>"/>
+            <span class="errors"><?= isset($errors['wins']) ? $errors['wins'] : '' ?></span>
     </div>
-    <div class="data-submit">
-        <input type="hidden" name="id" value="<?= $albumId ?>"/>
-        <input type="hidden" name="current-image" value="<?= $album['image'] ?>"/>
-        <input type="submit" name="submit" value="Save"/>
+    <div class="field is-horizontal">
+        <div class="field-label is-normal"></div>
+        <div class="field-body">
+            <button class="button is my-red is-fullwidth" type="submit" name="submit">Save</button>
+        </div>
     </div>
+
 </form>
+    </section
 <div>
-    <a href="index.php">Go back to the list</a>
+    <a class="button mt-4" href="index.php">&laquo; Go back to the fighter's</a>
 </div>
 </body>
 </html>

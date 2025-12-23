@@ -30,12 +30,6 @@ mysqli_close($db);
     <h1 class="title mt-4">The 10 Best in Boxing</h1>
     <h2 class="subtitle mt-4">Overview of my top fighters</h2>
     <hr>
-<!--    <header class="hero is-info">-->
-<!--        <div class="hero-body">-->
-<!--            <p class="title">Music collection</p>-->
-<!--            <p class="subtitle">Overview of my top albums</p>-->
-<!--        </div>-->
-<!--    </header>-->
 
     <table class="table is-striped">
         <thead>
@@ -51,7 +45,7 @@ mysqli_close($db);
         </thead>
         <tfoot>
         <tr>
-            <td colspan="6" class="has-text-centered">&copy; Best in Boxing</td>
+            <td colspan="10" class="has-text-centered">&copy; Best in Boxing</td>
         </tr>
         </tfoot>
         <tbody>
@@ -64,7 +58,8 @@ mysqli_close($db);
                 <td><?= $boxer['weightclass'] ?></td>
                 <td><?= $boxer['wins'] ?></td>
                 <td><a href="details.php?id=<?= $boxer['id'] ?>">Details</a></td>
-                <td><a href="delete.php?id=<?=$boxer['id'] ?>">Delete</a></td>
+                <td><a href="edit.php?id=<?= $boxer['id'] ?>">Edit</a></td>
+                <td><a class="has-text-danger is-underlined" href="delete.php?id=<?=$boxer['id'] ?>">Delete</a></td>
             </tr>
         <?php } ?>
         </tbody>

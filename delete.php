@@ -3,25 +3,22 @@
 
 //Require music data & image helpers to use variable in this file
 require_once "includes/database.php";
-require_once "includes/image-helpers.php";
 
 if (isset($_POST['submit'])) {
     // DELETE IMAGE
     // To remove the image we need to query the file name from the db.
     // Get the record from the database result
-    $albumId = mysqli_escape_string($db, $_POST['id']);
-    $query = "SELECT * FROM albums WHERE id = '$albumId'";
+    $boxerID = mysqli_escape_string($db, $_POST['id']);
+    $query = "SELECT * FROM boxers WHERE id = '$boxerID'";
     $result = mysqli_query($db, $query);
 
-    $album = mysqli_fetch_assoc($result);
+    $boxer = mysqli_fetch_assoc($result);
 
-    if (!empty($album['image'])) {
-        deleteImageFile($album['image']);
-    }
 
     // DELETE DATA
     // Remove the album data from the database with the existing albumId
-    $query = "DELETE FROM albums WHERE id = '$albumId'";
+
+    $query = "DELETE FROM boxers WHERE id = '$boxerID'";
     mysqli_query($db, $query);
 
     //Close connection
@@ -33,14 +30,14 @@ if (isset($_POST['submit'])) {
 
 } else if (isset($_GET['id']) || $_GET['id'] != '') {
     //Retrieve the GET parameter from the 'Super global'
-    $albumId = mysqli_escape_string($db, $_GET['id']);
+    $boxer = mysqli_escape_string($db, $_GET['id']);
 
     //Get the record from the database result
-    $query = "SELECT * FROM albums WHERE id = '$albumId'";
+    $query = "SELECT * FROM boxers WHERE id = '$boxer'";
     $result = mysqli_query($db, $query);
 
     if (mysqli_num_rows($result) == 1) {
-        $album = mysqli_fetch_assoc($result);
+        $boxer = mysqli_fetch_assoc($result);
     } else {
         // redirect when db returns no result
         header('Location: index.php');
@@ -61,16 +58,26 @@ if (isset($_POST['submit'])) {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Delete - <?= $album['name'] ?></title>
+    <title>Delete - <?= $boxer['name'] ?></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Delete - <?= $album['name'] ?></h2>
-<form action="" method="post">
+<div class="container px-4">
+<h2 class="title mt-4">Delete - <?= $boxer['name'] ?></h2>
+    <div class="container px-4" action="" method="post"> </div>
+<form class="column is-6" action="" method="post">
     <p>
-        Weet u zeker dat u het album "<?= $album['name'] ?>" wilt verwijderen?
+        Weet u zeker dat u het album "<?= $boxer['name'] ?>" wilt verwijderen?
     </p>
-    <input type="hidden" name="id" value="<?= $album['id'] ?>"/>
-    <input type="submit" name="submit" value="Verwijderen"/>
+    <input type="hidden" name="id" value="<?= $boxer['id'] ?>"/>
+    <div class="field-body">
+        <button class="button is my-red mt-4" type="submit" name="submit">Verwijderen</button>
+    </div>
+    <a class="button mt-4" href="index.php">&laquo; Go back to the fighter's</a>
+
+
+</div>
 </form>
 </body>
 </html>
