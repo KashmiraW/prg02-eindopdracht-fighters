@@ -1,32 +1,27 @@
 <?
 /** @var mysqli $db */
 
-//Check if the GET parameter 'id' exists and is not empty
 if (!isset($_GET['id']) || $_GET['id'] == '') {
-    // redirect to index.php
+
     header('Location: index.php');
     exit;
 }
 
-//Require database in this file
 require_once "includes/database.php";
 
-//Retrieve the GET parameter from the 'Super global'
 $boxer = mysqli_escape_string($db, $_GET['id']);
 
-//Get the record from the database result
 $query = "SELECT * FROM boxers WHERE id = $boxer";
 $result = mysqli_query($db, $query);
-//Check if db returned exactly one result
+
 if (mysqli_num_rows($result) != 1) {
-    // redirect when db returns no result
+
     header('Location: index.php');
     exit;
 }
 
 $boxer = mysqli_fetch_assoc($result);
 
-//Close connection
 mysqli_close($db);
 ?>
 <!doctype html>

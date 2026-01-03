@@ -6,7 +6,6 @@ require_once "includes/database.php";
 $query = "SELECT * FROM boxers";
 $result = mysqli_query($db, $query);
 
-// Get all boxers from the query
 $boxer = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $boxer[] = $row;

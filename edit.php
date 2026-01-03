@@ -1,18 +1,16 @@
 <?php
-//Require database in this file
 /** @var mysqli $db */
 require_once "includes/database.php";
 
 $id = mysqli_escape_string($db, $_GET['id']);
 
 $sql = "SELECT * FROM boxers WHERE id = $id";
-//Execute the query
+
 $result = mysqli_query($db, $sql);
 $boxer = mysqli_fetch_assoc($result);
 
-//Check if Post isset, else do nothing
 if (isset($_POST['submit'])) {
-    //Postback with the data showed to the user, first retrieve data from 'Super global'
+
     $name  = $_POST['name'];
     $country = $_POST['country'];
     $style   = $_POST['style'];
@@ -23,10 +21,9 @@ if (isset($_POST['submit'])) {
 
     if (empty($errors)) {
 
-        //Update the record in the database
         $sql = "UPDATE boxers SET name ='$name', country = '$country', style = '$style', weightclass = '$weightclass', wins = '$wins' WHERE id = $id";
         $result = mysqli_query($db, $sql);
-        //Redirect to homepage after update & exit script
+
         if ($result) {
             header('Location: index.php');
             exit;
@@ -35,7 +32,6 @@ if (isset($_POST['submit'])) {
     }
 }
 
-//Close connection
 mysqli_close($db);
 ?>
 <!doctype html>

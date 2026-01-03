@@ -4,7 +4,6 @@
 require_once "includes/database.php";
 
 if (isset($_POST['submit'])) {
-    // Get the record from the database result
     $boxerID = mysqli_escape_string($db, $_POST['id']);
     $query = "SELECT * FROM boxers WHERE id = '$boxerID'";
     $result = mysqli_query($db, $query);
@@ -20,10 +19,8 @@ if (isset($_POST['submit'])) {
     exit;
 
 } else if (isset($_GET['id']) || $_GET['id'] != '') {
-    //Retrieve the GET parameter from the 'Super global'
     $boxer = mysqli_escape_string($db, $_GET['id']);
 
-    //Get the record from the database result
     $query = "SELECT * FROM boxers WHERE id = '$boxer'";
     $result = mysqli_query($db, $query);
 
