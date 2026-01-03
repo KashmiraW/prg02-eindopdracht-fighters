@@ -1,7 +1,7 @@
-<?php
+<?
 /** @var mysqli $db */
 
-// redirect when uri does not contain a id
+//Check if the GET parameter 'id' exists and is not empty
 if (!isset($_GET['id']) || $_GET['id'] == '') {
     // redirect to index.php
     header('Location: index.php');
@@ -17,7 +17,7 @@ $boxer = mysqli_escape_string($db, $_GET['id']);
 //Get the record from the database result
 $query = "SELECT * FROM boxers WHERE id = $boxer";
 $result = mysqli_query($db, $query);
-
+//Check if db returned exactly one result
 if (mysqli_num_rows($result) != 1) {
     // redirect when db returns no result
     header('Location: index.php');

@@ -1,31 +1,26 @@
 <?php
 /** @var mysqli $db */
 
-//Check if Post isset, else do nothing
 if (isset($_POST['submit'])) {
-    //Postback with the data showed to the user, first retrieve data from 'Super global'
+
     $name = $_POST['name'];
     $country = $_POST['country'];
     $style = $_POST['style'];
     $weightclass = $_POST['weightclass'];
     $wins = $_POST['wins'];
 
-    //Require the form validation handling
     require_once "includes/form-validation.php";
 
     if (empty($errors)) {
-        //Require database in this file & image helpers
+
         require_once "includes/database.php";
 
-        //Save the record to the database
         $query = "INSERT INTO boxers (name, country, style, weightclass, wins)
                   VALUES ('$name', '$country', '$style', '$weightclass', '$wins')";
         $result = mysqli_query($db, $query);
 
-        //Close connection
         mysqli_close($db);
 
-        // Redirect to index.php
         header('Location: index.php');
         exit;
     }

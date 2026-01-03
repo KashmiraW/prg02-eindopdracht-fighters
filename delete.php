@@ -1,12 +1,9 @@
 <?php
 /** @var mysqli $db */
 
-//Require music data & image helpers to use variable in this file
 require_once "includes/database.php";
 
 if (isset($_POST['submit'])) {
-    // DELETE IMAGE
-    // To remove the image we need to query the file name from the db.
     // Get the record from the database result
     $boxerID = mysqli_escape_string($db, $_POST['id']);
     $query = "SELECT * FROM boxers WHERE id = '$boxerID'";
@@ -14,17 +11,11 @@ if (isset($_POST['submit'])) {
 
     $boxer = mysqli_fetch_assoc($result);
 
-
-    // DELETE DATA
-    // Remove the album data from the database with the existing albumId
-
     $query = "DELETE FROM boxers WHERE id = '$boxerID'";
     mysqli_query($db, $query);
 
-    //Close connection
     mysqli_close($db);
 
-    //Redirect to homepage after deletion & exit script
     header("Location: index.php");
     exit;
 
@@ -38,18 +29,13 @@ if (isset($_POST['submit'])) {
 
     if (mysqli_num_rows($result) == 1) {
         $boxer = mysqli_fetch_assoc($result);
+
     } else {
-        // redirect when db returns no result
         header('Location: index.php');
         exit;
     }
-} else {
-    // Id was not present in the url OR the form was not submitted
-
-    // redirect to index.php
-    header('Location: index.php');
-    exit;
 }
+
 ?>
 <!doctype html>
 <html lang="en">

@@ -1,20 +1,17 @@
 <?php
 /** @var mysqli $db */
 
-//Require DB settings with connection variable
 require_once "includes/database.php";
 
-//Get the result set from the database with a SQL query
 $query = "SELECT * FROM boxers";
 $result = mysqli_query($db, $query);
 
-//Loop through the result to create a custom array
+// Get all boxers from the query
 $boxer = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $boxer[] = $row;
 }
 
-//Close connection
 mysqli_close($db);
 ?>
 <!doctype html>
@@ -63,6 +60,8 @@ mysqli_close($db);
             </tr>
         <?php } ?>
         </tbody>
+        <a class="button is-my my-red mb-4" href="login.php">Log Out</a>
+
     </table>
     <a class="button is-my my-red" href="create.php">Add new fighter</a>
 </div>

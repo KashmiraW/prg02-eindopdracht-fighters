@@ -1,67 +1,38 @@
 <?php
-//Require database in this file & image helpers
+//Require database in this file
 /** @var mysqli $db */
 require_once "includes/database.php";
-require_once "includes/image-helpers.php";
+
+$id = mysqli_escape_string($db, $_GET['id']);
+
+$sql = "SELECT * FROM boxers WHERE id = $id";
+//Execute the query
+$result = mysqli_query($db, $sql);
+$boxer = mysqli_fetch_assoc($result);
 
 //Check if Post isset, else do nothing
 if (isset($_POST['submit'])) {
     //Postback with the data showed to the user, first retrieve data from 'Super global'
-    $boxer = $_POST['id'];
-    $name  = mysqli_escape_string($db, $_POST['name']);
-    $country = mysqli_escape_string($db, $_POST['country']);
-    $style   = mysqli_escape_string($db, $_POST['style']);
-    $weightclass = mysqli_escape_string($db, $_POST['weightclass']);
-    $wins  = mysqli_escape_string($db, $_POST['wins']);
+    $name  = $_POST['name'];
+    $country = $_POST['country'];
+    $style   = $_POST['style'];
+    $weightclass = $_POST['weightclass'];
+    $wins  = filter_input(INPUT_POST, "wins", FILTER_VALIDATE_INT);
 
-
-    //Require the form validation handling
     require_once "includes/form-validation.php";
-
-    //Save variables to array so the form won't break
-    //This array is build the same way as the db result
-    $boxer = [
-        'id' => $boxer,
-        'name' => $name,
-        'country' => $country,
-        'style' => $style,
-        'weightclass' => $weightclass,
-        'wins' => $wins,
-    ];
 
     if (empty($errors)) {
 
         //Update the record in the database
-        $query = "UPDATE boxers
-                  SET name = '$name', name = '$name', country = '$country', style = '$style', weightclass = '$weightclass', wins = '$wins'
-                  WHERE id = '$boxer[id]'";
-        $result = mysqli_query($db, $query);
-
+        $sql = "UPDATE boxers SET name ='$name', country = '$country', style = '$style', weightclass = '$weightclass', wins = '$wins' WHERE id = $id";
+        $result = mysqli_query($db, $sql);
+        //Redirect to homepage after update & exit script
         if ($result) {
             header('Location: index.php');
             exit;
-        } else {
-            $errors[] = 'Something went wrong in your database query: ' . mysqli_error($db);
         }
 
     }
-} else if (isset($_GET['id'])) {
-    //Retrieve the GET parameter from the 'Super global'
-    $boxingId = $_GET['id'];
-
-    //Get the record from the database result
-    $query = "SELECT * FROM boxers WHERE id = " . mysqli_escape_string($db, $boxingId);
-    $result = mysqli_query($db, $query);
-    if (mysqli_num_rows($result) == 1) {
-        $boxer = mysqli_fetch_assoc($result);
-    } else {
-        // redirect when db returns no result
-        header('Location: index.php');
-        exit;
-    }
-} else {
-    header('Location: index.php');
-    exit;
 }
 
 //Close connection
